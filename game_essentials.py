@@ -17,6 +17,7 @@ class Carta:
     
 class Mazzo:
     def __init__(self):
+        self.indice_carta_da_pescare = 0
         self.mazzo = []
         for seme in NOMI_DEI_SEMI:
             for valore in NOMI_DEI_VALORI:
@@ -33,9 +34,19 @@ class Mazzo:
         shuffle(self.mazzo)
 
     def pesca(self):
-        return self.mazzo.pop()
+        if self.indice_carta_da_pescare >= len(self.mazzo):
+            raise MazzoFinitoError('Non ci sono più carte da pescare')
+        else:
+            carta_pescata = self.mazzo[self.indice_carta_da_pescare]
+            self.indice_carta_da_pescare += 1
+            return carta_pescata
+
+    def reset_indice_pescata(self):
+        self.indice_carta_da_pescare = 0;
 
 
+class MazzoFinitoError(Exception):
+    pass
 
 
 

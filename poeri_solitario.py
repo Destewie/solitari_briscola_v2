@@ -1,4 +1,9 @@
 from game_essentials import Carta, Mazzo
 
-carta = Carta(1, 1)
-print(carta)
+class PoeriSolitario:
+    def __init__(self):
+        self.mazzo = Mazzo()
+
+    def setup(self):
+        
+        self.mazzo.mescola()
