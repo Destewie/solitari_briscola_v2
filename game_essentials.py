@@ -32,6 +32,7 @@ class Mazzo:
 
     def mescola(self):
         shuffle(self.mazzo)
+        self.indice_carta_da_pescare = 0;
 
     def pesca(self):
         if self.indice_carta_da_pescare >= len(self.mazzo):
@@ -40,9 +41,6 @@ class Mazzo:
             carta_pescata = self.mazzo[self.indice_carta_da_pescare]
             self.indice_carta_da_pescare += 1
             return carta_pescata
-
-    def reset_indice_pescata(self):
-        self.indice_carta_da_pescare = 0;
 
 
 class MazzoFinitoError(Exception):
