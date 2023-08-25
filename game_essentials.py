@@ -30,6 +30,12 @@ class Mazzo:
     def __len__(self):
         return len(self.mazzo)
 
+    def nuemero_carte_coperte(self):
+        return len(self) - self.indice_carta_da_pescare
+
+    def numero_carte_pescate(self):
+        return self.indice_carta_da_pescare
+
     def mescola(self):
         shuffle(self.mazzo)
         self.indice_carta_da_pescare = 0;

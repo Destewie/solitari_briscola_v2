@@ -1,6 +1,6 @@
-from game_essentials import Carta, Mazzo, MazzoFinitoError
+from game_essentials import Mazzo, MazzoFinitoError
 
-class PoeriSolitario:
+class Solitario:
     def __init__(self):
         self.mazzo = Mazzo()
 
@@ -18,4 +18,5 @@ class PoeriSolitario:
                 if(contatore == carta.valore):
                     return False
             except MazzoFinitoError:
+                #print(self.mazzo)
                 return True
