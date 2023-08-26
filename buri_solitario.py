@@ -1,8 +1,16 @@
-from briscola_essentials import Carta, Mazzo, MazzoFinitoError
+from briscola_essentials import Carta, Mazzo, MazzoFinitoError, NOMI_DEI_SEMI, NOMI_DEI_VALORI
+from copy import copy
 
 class CartaBuri(Carta):
     def __eq__(self, other):
         return self.seme == other.seme or self.valore == other.valore
+
+class MazzoBuri(Mazzo):
+    def __init__(self):
+        self.mazzo = []
+        for seme in NOMI_DEI_SEMI:
+            for valore in NOMI_DEI_VALORI:
+                self.mazzo.append(CartaBuri(seme, valore))
 
 class Mazzetto():
     def __init__(self, carta):
@@ -13,13 +21,20 @@ class Mazzetto():
 class Tavolo:
     def __init__(self):
         self.mazzetti = []
-        self.avvenuti_spostamenti = False
+        self.avvenuti_spostamenti_ultimo_controllo_ricorsivo = False
         self.indice_mazzetto_piu_profondo_sostituito = None #serve per evitare di controllare sempre tutti i mazzetti
 
     def __str__(self):
+        carte = ""
+        contatore = 0
         for mazzetto in self.mazzetti:
             if not mazzetto.eliminato_dal_gioco:
-                print(mazzetto.carta_in_cima, end="\t")
+                carte += str(mazzetto.carta_in_cima) + "\t\t"
+
+                contatore += 1
+                if(contatore % 6 == 0):
+                    carte += "\n"
+        return carte
 
     def aggiungi_carta(self, carta):
         self.mazzetti.append(Mazzetto(carta))
@@ -39,29 +54,30 @@ class Tavolo:
         return self.mazzetti.pop(indice)
 
     def sovrapposizione_mazzetto(self, i_mazzetto_che_alzo, i_mazzetto_che_schiaccio):
-        self.mazzetti[i_mazzetto_che_schiaccio] = self.mazzetti[i_mazzetto_che_alzo]
+        self.mazzetti[i_mazzetto_che_schiaccio] = copy(self.mazzetti[i_mazzetto_che_alzo])
         self.marka_mazzetto(i_mazzetto_che_alzo)
 
-        self.avvenuti_spostamenti = True
+        self.avvenuti_spostamenti_ultimo_controllo_ricorsivo = True
         if(self.indice_mazzetto_piu_profondo_sostituito is None or i_mazzetto_che_schiaccio < self.indice_mazzetto_piu_profondo_sostituito):
-            self.indice_ultimo_mazzetto_sostituito = i_mazzetto_che_schiaccio
-
-        print(self) #debug
+            self.indice_mazzetto_piu_profondo_sostituito = i_mazzetto_che_schiaccio
+        
+        print(str(self)) #debug
+        print()
 
     def pulizia_carte_markate(self):
-        if (self.avvenuti_spostamenti and self.indice_ultimo_mazzetto_sostituito is not None): #ridondante
-            for i in reversed(range(self.indice_mazzetto_piu_profondo_sostituito+1, len(self.mazzetti))):
+        if (self.avvenuti_spostamenti_ultimo_controllo_ricorsivo and self.indice_mazzetto_piu_profondo_sostituito is not None): #ridondante
+            for i in reversed(range(self.indice_mazzetto_piu_profondo_sostituito, len(self.mazzetti))):
                 if self.mazzetti[i].eliminato_dal_gioco:
                     self.rimuovi_mazzetto(i)
 
     def setup_controllo_ricorsivo(self):
-        self.avvenuti_spostamenti = False
-        self.indice_ultimo_mazzetto_sostituito = None
+        self.avvenuti_spostamenti_ultimo_controllo_ricorsivo = False
+        self.indice_mazzetto_piu_profondo_sostituito = None
 
     def controllo_ricorsivo(self, indice):
         numero_di_mazzetti_visibili = self.numero_di_mazzetti_visibili(indice)
 
-        if(numero_di_mazzetti_visibili != 0):
+        if(numero_di_mazzetti_visibili != 0 and indice > 0 and indice < len(self.mazzetti)):
             # Qui vado a fare i controlli sul mazzetto subito precedente
             if(self.mazzetti[indice].carta_in_cima == self.mazzetti[indice-1].carta_in_cima):
                 self.sovrapposizione_mazzetto(i_mazzetto_che_alzo=indice, i_mazzetto_che_schiaccio=indice-1)
@@ -77,7 +93,7 @@ class Tavolo:
 
 class Solitario:
     def __init__(self):
-        self.mazzo = Mazzo()
+        self.mazzo = MazzoBuri()
         self.tavolo = Tavolo()
 
     def setup(self):
@@ -87,15 +103,20 @@ class Solitario:
         while True:
             try:
                 self.tavolo.aggiungi_carta(self.mazzo.pesca())
-                print(self) #debug
+                print(str(self.tavolo)) #debug
+                print()
 
 
                 while True: #l'alternativa al do while in python è un while True con un break ad una certa condizione
-                    self.tavolo.setup_controllo_ricorsivo()
-                    self.tavolo.controllo_ricorsivo(len(self.tavolo.mazzetti)-1)
-                    self.tavolo.pulizia_carte_markate()
+                    avvenuti_spostamenti_controlli_ricorsivi_multipli = False
+                    for i in reversed(range(len(self.tavolo.mazzetti))):
+                        self.tavolo.setup_controllo_ricorsivo()
+                        self.tavolo.controllo_ricorsivo(i)
+                        if self.tavolo.avvenuti_spostamenti_ultimo_controllo_ricorsivo:
+                            avvenuti_spostamenti_controlli_ricorsivi_multipli = True
+                        self.tavolo.pulizia_carte_markate()
 
-                    if not self.tavolo.avvenuti_spostamenti:
+                    if not avvenuti_spostamenti_controlli_ricorsivi_multipli:
                         break
 
         
@@ -103,5 +124,20 @@ class Solitario:
                 break
 
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
+    solitario = Solitario()
+    solitario.setup()
+    solitario.gioca()
 
+    #carta1 = CartaBuri(4, 4)
+    #carta2 = CartaBuri(3, 3)
+    #print(carta1)
+    #print(carta2)
+
+    #carta1 = copy(carta2)
+    #print(carta1)
+    #print(carta2)
+
+    #carta2.valore = 1
+    #print(carta1)
+    #print(carta2)

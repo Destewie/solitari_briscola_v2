@@ -1,4 +1,5 @@
 from random import shuffle
+from copy import copy
 
 NOMI_DEI_SEMI = {1: 'Danari', 2: 'Coppe', 3: 'Spade', 4: 'Bastoni'}
 NOMI_DEI_VALORI = {1: 'Asso', 2: 'Due', 3: 'Tre', 4: 'Quattro', 5: 'Cinque', 6: 'Sei', 7: 'Sette', 8: 'Fante', 9: 'Cavallo', 10: 'Re'}
@@ -9,10 +10,16 @@ class Carta:
         self.valore = valore
 
     def __str__(self):      
-        nome_seme = NOMI_DEI_SEMI.get(self.seme, 'Seme non valido')
-        nome_valore = NOMI_DEI_VALORI.get(self.valore, 'Valore non valido')
+        nome_seme = NOMI_DEI_SEMI.get(self.seme, f'Seme non valido ({self.seme}))')
+        nome_valore = NOMI_DEI_VALORI.get(self.valore, f'Valore non valido ({self.valore})')
 
         return f'{nome_valore} di {nome_seme}'
+    
+    def __copy__(self):
+        return Carta(self.seme, self.valore)
+
+    #ridefinisco l'operatore per l'assegnazione tra due oggetti Carta
+
 
     
 class Mazzo:
