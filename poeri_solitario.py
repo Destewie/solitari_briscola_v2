@@ -1,4 +1,4 @@
-from game_essentials import Mazzo, MazzoFinitoError
+from briscola_essentials import Mazzo, MazzoFinitoError
 
 class Solitario:
     def __init__(self):
