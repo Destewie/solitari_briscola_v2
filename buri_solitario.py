@@ -101,6 +101,8 @@ class Solitario:
         self.tavolo.mazzetti.clear()
         
     def gioca(self):
+        self.setup()
+
         while True:
             try:
                 self.tavolo.aggiungi_carta(self.mazzo.pesca())
@@ -132,5 +134,4 @@ class Solitario:
 
 if __name__ == "__main__":
     solitario = Solitario()
-    solitario.setup()
     solitario.gioca()
