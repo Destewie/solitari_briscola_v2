@@ -61,8 +61,8 @@ class Tavolo:
         if(self.indice_mazzetto_piu_profondo_sostituito is None or i_mazzetto_che_schiaccio < self.indice_mazzetto_piu_profondo_sostituito):
             self.indice_mazzetto_piu_profondo_sostituito = i_mazzetto_che_schiaccio
         
-        print(str(self)) #debug
-        print()
+        #print(str(self)) #debug
+        #print()
 
     def pulizia_carte_markate(self):
         if (self.avvenuti_spostamenti_ultimo_controllo_ricorsivo and self.indice_mazzetto_piu_profondo_sostituito is not None): #ridondante
@@ -98,13 +98,14 @@ class Solitario:
 
     def setup(self):
         self.mazzo.mescola()
+        self.tavolo.mazzetti.clear()
         
     def gioca(self):
         while True:
             try:
                 self.tavolo.aggiungi_carta(self.mazzo.pesca())
-                print(str(self.tavolo)) #debug
-                print()
+                #print(str(self.tavolo)) #debug
+                #print()
 
 
                 while True: #l'alternativa al do while in python è un while True con un break ad una certa condizione
@@ -121,23 +122,15 @@ class Solitario:
 
         
             except MazzoFinitoError:
-                break
+                if(len(self.tavolo.mazzetti) == 1):
+                    #print("HAI VINTO!")
+                    return True
+                else:
+                    #print("HAI PERSO, RITENTA!")
+                    return False
 
 
 if __name__ == "__main__":
     solitario = Solitario()
     solitario.setup()
     solitario.gioca()
-
-    #carta1 = CartaBuri(4, 4)
-    #carta2 = CartaBuri(3, 3)
-    #print(carta1)
-    #print(carta2)
-
-    #carta1 = copy(carta2)
-    #print(carta1)
-    #print(carta2)
-
-    #carta2.valore = 1
-    #print(carta1)
-    #print(carta2)
