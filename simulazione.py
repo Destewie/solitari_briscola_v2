@@ -3,7 +3,7 @@ import buri_solitario
 import os
 import matplotlib.pyplot as plt
 
-NUMERO_DI_PARTITE = 1000000
+NUMERO_DI_PARTITE = 1000
 NUMERO_DI_SIMBOLI_DI_AVANZAMENTO = 100
 
 if __name__ == "__main__":
@@ -81,22 +81,31 @@ if __name__ == "__main__":
     # STAMPA RISULTATI POERI
     poeri_percentuale = poeri_contatore / NUMERO_DI_PARTITE * 100
     poeri_carte_medie_pescate = poeri_carte_pescate_totali / NUMERO_DI_PARTITE
-    print(f"Percentuale di vittorie solitario dei poeri: {poeri_percentuale}%")
-    print(f"Carte medie pescate nel solitario dei poeri: {poeri_carte_medie_pescate}")
+    print("SOLITARIO DEI POERI")
+    print("[Si conta continuamente da 1 a 3 sperando di non pescare il valore corrispondente]")
+    print()
+    print(f"Percentuale di vittorie: {poeri_percentuale}%")
+    print(f"Carte medie pescate prima di perdere: {poeri_carte_medie_pescate}")
 
+    print()
+    print("---------------------------------------------")
     print()
 
     # STAMPA RISULTATI BURI
     buri_percentuale = buri_contatore / NUMERO_DI_PARTITE * 100
     buri_media_mazzetti = buri_mazzetti_totali / NUMERO_DI_PARTITE
-    print(f"Percentuale di vittorie solitario di Buri: {buri_percentuale}%")
-    print(f"Mazzetti medi sul tavolo a fine partita nel solitario di Buri: {buri_media_mazzetti}")
+    print("SOLITARIO DI BURI")
+    print("[Quello in cui sovrapponi mazzetti vicini se hai seme o valore uguale. Bisogna concludere la partita con un solo mazzetto.")
+    print()
+    print(f"Percentuale di vittorie: {buri_percentuale}%")
+    print(f"Media dei mazzetti rimanenti sul tavolo a fine partita: {buri_media_mazzetti}")
 
 
     # PLOT 2D DEI VETTORI DEI RUSULTATI con label e legenda
 
     plt.plot(poeri_vettore_risultati_crescente, label="Solitario dei Poeri")
     plt.plot(buri_vettore_risultati_crescente, label="Solitario di Buri")
+    plt.legend()
     plt.ylabel('Vittorie')
     plt.xlabel('Partite')
     plt.title('Vittorie dei solitari')
