@@ -11,7 +11,7 @@ class MazzoBuri(Mazzo):
         self.carte = []
         for seme in NOMI_DEI_SEMI:
             for valore in NOMI_DEI_VALORI:
-                self.mazzo.append(CartaBuri(seme, valore))
+                self.carte.append(CartaBuri(seme, valore))
 
 class Mazzetto():
     def __init__(self, carta):
@@ -74,8 +74,8 @@ class Tavolo:
         if(self.indice_mazzetto_piu_profondo_sostituito is None or i_mazzetto_che_schiaccio < self.indice_mazzetto_piu_profondo_sostituito):
             self.indice_mazzetto_piu_profondo_sostituito = i_mazzetto_che_schiaccio
         
-        print(str(self)) #debug
-        print()
+        #print(str(self)) #debug
+        #print()
 
     def pulizia_mazzetti_markati(self):
         if (self.avvenuti_spostamenti_ultimo_controllo_ricorsivo and self.indice_mazzetto_piu_profondo_sostituito is not None): #ridondante
@@ -108,6 +108,11 @@ class Tavolo:
 
         return copy(self.mazzetti[0].carte)
 
+    def raggruppa_mazzetti_da_sinistra_a_destra_in_nuovo_deck(self):
+        for i in reversed(range(0, len(self.mazzetti)-1)):
+            self.sovrapposizione_mazzetto(i_mazzetto_che_schiaccio=len(self.mazzetti)-1, i_mazzetto_che_alzo=i)
+
+        return copy(self.mazzetti[len(self.mazzetti)-1].carte)
             
 
 
@@ -117,17 +122,22 @@ class Solitario:
         self.mazzo.mescola()
         self.tavolo = Tavolo()
 
-    def setup_post_game(self):
-        self.mazzo.mazzo = self.tavolo.raggruppa_mazzetti_da_destra_a_sinistra_in_nuovo_deck()
+    def setup_post_game_da_destra_a_sinistra(self):
+        self.mazzo.carte = self.tavolo.raggruppa_mazzetti_da_destra_a_sinistra_in_nuovo_deck()
+        self.mazzo.indice_carta_da_pescare = 0
         self.tavolo.mazzetti.clear()
-        print(f"Il nuovo mazzo ha {len(self.mazzo)} carte")
+
+    def setup_post_game_da_sinistra_a_destra(self):
+        self.mazzo.carte = self.tavolo.raggruppa_mazzetti_da_sinistra_a_destra_in_nuovo_deck()
+        self.mazzo.indice_carta_da_pescare = 0
+        self.tavolo.mazzetti.clear()
 
     def gioca(self):
         while True:
             try:
                 self.tavolo.aggiungi_carta(self.mazzo.pesca())
-                print(str(self.tavolo)) #debug
-                print()
+                #print(str(self.tavolo)) #debug
+                #print()
 
 
                 while True: #l'alternativa al do while in python è un while True con un break ad una certa condizione
@@ -156,6 +166,10 @@ if __name__ == "__main__":
     solitario = Solitario()
     solitario.gioca()
     print("----------------------------------------")
-    #solitario.setup_post_game()
-    #solitario.gioca()
-
+    #solitario.setup_post_game_da_destra_a_sinistra()
+    solitario.setup_post_game_da_sinistra_a_destra()
+    print("il mazzo ha " + str(len(solitario.mazzo.carte)) + " carte")
+    print("mazzo: ")
+    print(str(solitario.mazzo))
+    print("----------------------------------------")
+    solitario.gioca()
