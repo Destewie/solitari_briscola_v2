@@ -1,8 +1,9 @@
 import poeri_solitario
 import buri_solitario
 import os
+import matplotlib.pyplot as plt
 
-NUMERO_DI_PARTITE = 10000000
+NUMERO_DI_PARTITE = 1000000
 NUMERO_DI_SIMBOLI_DI_AVANZAMENTO = 100
 
 if __name__ == "__main__":
@@ -13,9 +14,14 @@ if __name__ == "__main__":
     # Statistiche POERI
     poeri_contatore = 0
     poeri_carte_pescate_totali = 0
+    poeri_vettore_risultati_crescente = []
+    poeri_tmp = 0
 
     # Statistiche BURI
     buri_contatore = 0
+    buri_mazzetti_totali = 0
+    buri_vettore_risultati_crescente = []
+    buri_tmp = 0
 
 
     # STAMPA INIZIO
@@ -41,15 +47,32 @@ if __name__ == "__main__":
 
         #--------------------------------------------------------
 
+        poeri_tmp = 0
         if poeri_solitario.gioca():
             poeri_contatore += 1
+            poeri_tmp = 1
+
+        if(len(poeri_vettore_risultati_crescente) == 0):
+            poeri_vettore_risultati_crescente.append(poeri_tmp)
+        else:
+            poeri_tmp += poeri_vettore_risultati_crescente[-1]  
+            poeri_vettore_risultati_crescente.append(poeri_tmp)
 
         poeri_carte_pescate_totali += poeri_solitario.mazzo.numero_carte_pescate()
 
         #--------------------------------------------------------
 
+        buri_tmp = 0
         if buri_solitario.gioca():
             buri_contatore += 1
+            buri_tmp = 1
+
+        if(len(buri_vettore_risultati_crescente) != 0):
+            buri_tmp += buri_vettore_risultati_crescente[-1]
+
+        buri_vettore_risultati_crescente.append(buri_tmp)
+
+        buri_mazzetti_totali += len(buri_solitario.tavolo.mazzetti)
 
         #--------------------------------------------------------
 
@@ -65,5 +88,24 @@ if __name__ == "__main__":
 
     # STAMPA RISULTATI BURI
     buri_percentuale = buri_contatore / NUMERO_DI_PARTITE * 100
+    buri_media_mazzetti = buri_mazzetti_totali / NUMERO_DI_PARTITE
     print(f"Percentuale di vittorie solitario di Buri: {buri_percentuale}%")
+    print(f"Mazzetti medi sul tavolo a fine partita nel solitario di Buri: {buri_media_mazzetti}")
+
+
+    # PLOT 2D DEI VETTORI DEI RUSULTATI con label e legenda
+
+    plt.plot(poeri_vettore_risultati_crescente, label="Solitario dei Poeri")
+    plt.plot(buri_vettore_risultati_crescente, label="Solitario di Buri")
+    plt.ylabel('Vittorie')
+    plt.xlabel('Partite')
+    plt.title('Vittorie dei solitari')
+    plt.show()
+
+
+
+    
+
+
+    
 
