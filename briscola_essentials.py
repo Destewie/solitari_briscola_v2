@@ -25,17 +25,17 @@ class Carta:
 class Mazzo:
     def __init__(self):
         self.indice_carta_da_pescare = 0
-        self.mazzo = []
+        self.carte = []
         for seme in NOMI_DEI_SEMI:
             for valore in NOMI_DEI_VALORI:
-                self.mazzo.append(Carta(seme, valore))
+                self.carte.append(Carta(seme, valore))
 
     def __str__(self):
         # usa il metodo __str__ già definito in carta
-        return '\n'.join(str(carta) for carta in self.mazzo)
+        return '\n'.join(str(carta) for carta in self.carte)
 
     def __len__(self):
-        return len(self.mazzo)
+        return len(self.carte)
 
     def nuemero_carte_coperte(self):
         return len(self) - self.indice_carta_da_pescare
@@ -44,14 +44,14 @@ class Mazzo:
         return self.indice_carta_da_pescare
 
     def mescola(self):
-        shuffle(self.mazzo)
+        shuffle(self.carte)
         self.indice_carta_da_pescare = 0;
 
     def pesca(self):
-        if self.indice_carta_da_pescare >= len(self.mazzo):
+        if self.indice_carta_da_pescare >= len(self.carte):
             raise MazzoFinitoError('Non ci sono più carte da pescare')
         else:
-            carta_pescata = self.mazzo[self.indice_carta_da_pescare]
+            carta_pescata = self.carte[self.indice_carta_da_pescare]
             self.indice_carta_da_pescare += 1
             return carta_pescata
 
