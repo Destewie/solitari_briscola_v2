@@ -39,13 +39,13 @@ class Tavolo:
     def rimuovi_mazzetto(self, indice):
         return self.mazzetti.pop(indice)
 
-    def sovrapposizione_mazzetto(self, i_vecchio_mazzetto, i_nuovo_mazzetto):
-        self.mazzetti[i_nuovo_mazzetto] = self.mazzetti[i_vecchio_mazzetto]
-        self.marka_mazzetto(i_vecchio_mazzetto)
+    def sovrapposizione_mazzetto(self, i_mazzetto_che_alzo, i_mazzetto_che_schiaccio):
+        self.mazzetti[i_mazzetto_che_schiaccio] = self.mazzetti[i_mazzetto_che_alzo]
+        self.marka_mazzetto(i_mazzetto_che_alzo)
 
         self.avvenuti_spostamenti = True
-        if(self.indice_mazzetto_piu_profondo_sostituito is None or i_nuovo_mazzetto < self.indice_mazzetto_piu_profondo_sostituito):
-            self.indice_ultimo_mazzetto_sostituito = i_nuovo_mazzetto
+        if(self.indice_mazzetto_piu_profondo_sostituito is None or i_mazzetto_che_schiaccio < self.indice_mazzetto_piu_profondo_sostituito):
+            self.indice_ultimo_mazzetto_sostituito = i_mazzetto_che_schiaccio
 
     def pulizia_tavolo(self):
         if (self.avvenuti_spostamenti and self.indice_ultimo_mazzetto_sostituito is not None): #ridondante
@@ -57,6 +57,20 @@ class Tavolo:
             self.indice_ultimo_mazzetto_sostituito = None
 
     def controllo_ricorsivo(self, indice):
+        numero_di_mazzetti_visibili = self.numero_di_mazzetti_visibili(indice)
+
+        if(numero_di_mazzetti_visibili != 0):
+            # Qui vado a fare i controlli sul mazzetto subito precedente
+            if(self.mazzetti[indice].carta_in_cima == self.mazzetti[indice-1].carta_in_cima):
+                self.sovrapposizione_mazzetto(i_mazzetto_che_alzo=indice, i_mazzetto_che_schiaccio=indice-1)
+                return self.controllo_ricorsivo(indice-1)
+
+            # Se non interagisco con il mazzetto subito precedente e ho possibilità di tentare con quello prima ancora, lo faccio
+            elif(numero_di_mazzetti_visibili == 2):
+                if(self.mazzetti[indice].carta_in_cima == self.mazzetti[indice-2].carta_in_cima):
+                    self.sovrapposizione_mazzetto(i_mazzetto_che_alzo=indice, i_mazzetto_che_schiaccio=indice-2)
+                    return self.controllo_ricorsivo(indice-2)
+                
 
 
 
