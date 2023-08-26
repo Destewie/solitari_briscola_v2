@@ -46,6 +46,8 @@ class Tavolo:
         if(self.indice_mazzetto_piu_profondo_sostituito is None or i_mazzetto_che_schiaccio < self.indice_mazzetto_piu_profondo_sostituito):
             self.indice_ultimo_mazzetto_sostituito = i_mazzetto_che_schiaccio
 
+        print(self) #debug
+
     def pulizia_carte_markate(self):
         if (self.avvenuti_spostamenti and self.indice_ultimo_mazzetto_sostituito is not None): #ridondante
             for i in reversed(range(self.indice_mazzetto_piu_profondo_sostituito+1, len(self.mazzetti))):
@@ -85,6 +87,8 @@ class Solitario:
         while True:
             try:
                 self.tavolo.aggiungi_carta(self.mazzo.pesca())
+                print(self) #debug
+
 
                 while True: #l'alternativa al do while in python è un while True con un break ad una certa condizione
                     self.tavolo.setup_controllo_ricorsivo()
