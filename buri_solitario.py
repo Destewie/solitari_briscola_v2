@@ -7,10 +7,11 @@ class CartaBuri(Carta):
 
 class MazzoBuri(Mazzo):
     def __init__(self):
-        self.mazzo = []
+        self.indice_carta_da_pescare = 0
+        self.carte = []
         for seme in NOMI_DEI_SEMI:
             for valore in NOMI_DEI_VALORI:
-                self.mazzo.append(CartaBuri(seme, valore))
+                self.carte.append(CartaBuri(seme, valore))
 
 class Mazzetto():
     def __init__(self, carta):
