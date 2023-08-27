@@ -4,8 +4,9 @@ import buri_solitario_no_shuffle as bsn
 import os
 import matplotlib.pyplot as plt
 import copy
+from termcolor import colored
 
-NUMERO_DI_PARTITE = 10000
+NUMERO_DI_PARTITE = 1000000
 NUMERO_DI_SIMBOLI_DI_AVANZAMENTO = 100
 NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO = 50
 CAMBIAMENTI_TOTALI_DI_MAZZO = int(NUMERO_DI_PARTITE / NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO)
@@ -16,7 +17,7 @@ def stampa_caricamento(i_partita):
         simboli_da_stampare = int(i / (NUMERO_DI_PARTITE/NUMERO_DI_SIMBOLI_DI_AVANZAMENTO))
 
         os.system("clear")
-        print("ATTENDERE LA FINE DELLA SIMULAZIONE...")
+        print(colored("ATTENDERE LA FINE DELLA SIMULAZIONE...", "red"))
         for j in range(simboli_da_stampare):
             print("#", end="", flush=True)
         for j in range(NUMERO_DI_SIMBOLI_DI_AVANZAMENTO - simboli_da_stampare):
@@ -65,6 +66,7 @@ if __name__ == "__main__":
     buri_solitario_no_shuffle_sx_dx.mazzo = copy.deepcopy(buri_solitario_no_shuffle_dx_sx.mazzo) #in modo da partire dallo stesso mazzo
 
 
+    buriNS_dx_sx_mazzo_vinto = False
     # Statistiche POERI
     poeri_vittorie_tot = 0
     poeri_carte_pescate_totali = 0
@@ -82,9 +84,11 @@ if __name__ == "__main__":
     buriNS_dx_sx_partite_perse_con_un_mazzo = 0
     buriNS_dx_sx_ultima_partita_vinta = False
     buriNS_dx_sx_prima_partita_persa = False
+    buriNS_dx_sx_mazzo_vinto = False
 
     # Statistiche BURI NO SHUFFLE Sx -> Dx
     buriNS_sx_dx_partite_perse_inizialmente_tot = 0
+    buriNS_sx_dx_mazzo_vinto = False
 
 
     # STAMPA INIZIO
@@ -123,31 +127,44 @@ if __name__ == "__main__":
                 buriNS_dx_sx_volte_in_cui_alla_fine_vince_perdendo_la_prima_tot += 1
                 buriNS_dx_sx_n_perse_inizialmente_quando_poi_vince_tot += buriNS_dx_sx_partite_perse_con_un_mazzo
 
-            # STAT dx -> sx
-
-
 
             # RESET STAT dx -> sx
             buriNS_dx_sx_partite_perse_con_un_mazzo = 0
             buriNS_dx_sx_prima_partita_persa = False
+            buriNS_dx_sx_mazzo_vinto = False
 
             # RESET STAT sx -> dx
+            buriNS_sx_dx_mazzo_vinto = False
 
 
-        buriNS_dx_sx_ultima_partita_vinta = False
-        if buri_solitario_no_shuffle_dx_sx.gioca():
-            # Se vince
-            buriNS_dx_sx_ultima_partita_vinta = True
-        else:
-            # Se perde
-            if(i % NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO == 0):
-                buriNS_dx_sx_prima_partita_persa = True
+        if(not buriNS_dx_sx_mazzo_vinto):
+            # GIOCA dx -> sx
+            buriNS_dx_sx_ultima_partita_vinta = False
+            if buri_solitario_no_shuffle_dx_sx.gioca():
+                # Se vince
+                buriNS_dx_sx_ultima_partita_vinta = True
+                buriNS_dx_sx_mazzo_vinto = True
 
-            buriNS_dx_sx_partite_perse_con_un_mazzo += 1
+            else:
+                # Se perde
+                if(i % NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO == 0):
+                    buriNS_dx_sx_prima_partita_persa = True
 
-        buri_solitario_no_shuffle_dx_sx.setup_post_game_da_destra_a_sinistra()
+                buriNS_dx_sx_partite_perse_con_un_mazzo += 1
 
-        #--------------------------------------------------------
+            buri_solitario_no_shuffle_dx_sx.setup_post_game_da_destra_a_sinistra()
+
+
+        if(not buriNS_sx_dx_mazzo_vinto):
+            # GIOCA sx -> dx
+            if(not buri_solitario_no_shuffle_sx_dx.gioca()):
+                # Se perde
+                buriNS_sx_dx_partite_perse_inizialmente_tot += 1
+            else:
+                buriNS_sx_dx_mazzo_vinto = True
+
+            buri_solitario_no_shuffle_sx_dx.setup_post_game_da_sinistra_a_destra()
+#--------------------------------------------------------
 
 
     os.system("clear")
@@ -156,46 +173,45 @@ if __name__ == "__main__":
     # STAMPA RISULTATI POERI
     poeri_percentuale = poeri_vittorie_tot / NUMERO_DI_PARTITE * 100
     poeri_carte_medie_pescate = poeri_carte_pescate_totali / NUMERO_DI_PARTITE
-    print("SOLITARIO DEI POERI")
-    print("[Si conta continuamente da 1 a 3 sperando di non pescare il valore corrispondente]")
+    print(colored("SOLITARIO DEI POERI", "red"))
+    print(colored("[Si conta continuamente da 1 a 3 sperando di non pescare il valore corrispondente]", "yellow"))
     print()
-    print(f"Percentuale di vittorie: {poeri_percentuale}%")
-    print(f"Carte medie pescate prima di perdere: {poeri_carte_medie_pescate}")
+    print("Percentuale di vittorie: " + colored(f"{poeri_percentuale}%", "blue"))
+    print("Carte medie pescate prima di perdere: " + colored(poeri_carte_medie_pescate, "blue"))
 
     print()
     print("---------------------------------------------")
-    print()
 
     # STAMPA RISULTATI BURI
     buri_percentuale = buri_vittorie_tot / NUMERO_DI_PARTITE * 100
     buri_media_mazzetti = buri_mazzetti_totali / NUMERO_DI_PARTITE
-    print("SOLITARIO DI BURI")
-    print("[Quello in cui sovrapponi mazzetti vicini se hai seme o valore uguale. Bisogna concludere la partita con un solo mazzetto]")
+    print(colored("SOLITARIO DI BURI", "red"))
+    print(colored("[Ogni volta che peschi una carta dal mazzo crei un nuovo mazzetto. Puoi sovrapporre un mazzetto ad uno dei suoi due precedenti se ha seme o valore uguale. Bisogna concludere la partita con un solo mazzetto]", "yellow"))
     print()
-    print(f"Percentuale di vittorie: {buri_percentuale}%")
-    print(f"Media dei mazzetti rimanenti sul tavolo a fine partita: {buri_media_mazzetti}")
+    print("Percentuale di vittorie: " + colored(f"{buri_percentuale}%", "blue"))
+    print("Media dei mazzetti rimanenti sul tavolo a fine partita: " + colored(buri_media_mazzetti, "blue"))
 
     print()
     print("---------------------------------------------")
-    print()
+    print("DISCLAIMER: Nei prossimi due tipi di solitario, una volta vinta una partita si continua a vincere senza sosta.") 
+    print("---------------------------------------------")
 
     # STAMPA RISULTATI BURI NO SHUFFLE Dx -> Sx
-    print("SOLITARIO DI BURI NO SHUFFLE Dx -> Sx")
-    print("[Il solitario di Buri, solo che a fine game raccolgo i mazzetti impilandoli da quello più a destra a quello più a sinistra]")
+    print(colored("SOLITARIO DI BURI NO SHUFFLE Dx -> Sx", "red"))
+    print(colored("[Il solitario di Buri, solo che a fine game raccolgo i mazzetti impilandoli da quello più a destra a quello più a sinistra (al posto che mescolare sempre)]", "yellow"))
     print()
-    print(f"Le carte vengono rimescolate {CAMBIAMENTI_TOTALI_DI_MAZZO} volte")
-    print(f"Percentuale esito positivo sovrapponendo i mazzetti a fine partita {NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO} volte prima di rimescolare casualmente il mazzo: {buriNS_dx_sx_volte_in_cui_alla_fine_vince_tot / CAMBIAMENTI_TOTALI_DI_MAZZO * 100}%")
-    print(f"Media partite perse prima di entrare in streak di vittorie con lo stesso mazzo (quando la prima partita non è già vincente): {buriNS_dx_sx_n_perse_inizialmente_quando_poi_vince_tot / buriNS_dx_sx_volte_in_cui_alla_fine_vince_perdendo_la_prima_tot}")
-    print("(Se la prima partita è vincente, anche tutte le successive lo sono)")
+    print(f"Probabilità che questo metodo porti ad una streak di vittorie: " + colored(f"{buriNS_dx_sx_volte_in_cui_alla_fine_vince_tot / CAMBIAMENTI_TOTALI_DI_MAZZO * 100}%", "blue"))
+    print("(Considerando solo i mazzi che portano ad una streak) Media partite perse prima di entrare in una streak di vittorie: " + colored(str(buriNS_dx_sx_n_perse_inizialmente_quando_poi_vince_tot / buriNS_dx_sx_volte_in_cui_alla_fine_vince_perdendo_la_prima_tot), "blue"))
 
     print()
     print("---------------------------------------------")
-    print()
 
     # STAMPA RISULTATI BURI NO SHUFFLE Sx -> Dx
-    print("SOLITARIO DI BURI NO SHUFFLE Sx -> Dx")
-    print("[Il solitario di Buri, solo che a fine game raccolgo i mazzetti impilandoli da quello più a sinistra a quello più a destra]")
+    print(colored("SOLITARIO DI BURI NO SHUFFLE Sx -> Dx", "red"))
+    print(colored("[Il solitario di Buri, solo che a fine game raccolgo i mazzetti impilandoli da quello più a sinistra a quello più a destra (al posto che mescolare sempre)]", "yellow"))
     print()
+    print("Con questo metodo sei sicuro di vincere sempre dopo qualche tentativo!!")
+    print("Media di partite perse prima di entrare in streak di vittorie: " + colored(str(buriNS_sx_dx_partite_perse_inizialmente_tot / CAMBIAMENTI_TOTALI_DI_MAZZO), "blue"))
 
 
 
