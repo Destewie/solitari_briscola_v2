@@ -164,12 +164,40 @@ class Solitario:
 
 if __name__ == "__main__":
     solitario = Solitario()
-    solitario.gioca()
-    print("----------------------------------------")
-    #solitario.setup_post_game_da_destra_a_sinistra()
-    solitario.setup_post_game_da_sinistra_a_destra()
-    print("il mazzo ha " + str(len(solitario.mazzo.carte)) + " carte")
-    print("mazzo: ")
-    print(str(solitario.mazzo))
-    print("----------------------------------------")
-    solitario.gioca()
+    contatore_first_win = 0
+    won = False
+
+    for i in range(10):
+        if not won:
+            contatore_first_win += 1
+        if(solitario.gioca()):
+            print("W", end="")
+            won = True
+        else:
+            print("#", end="")
+
+        #print("--------------------------------------------------------------")
+        solitario.setup_post_game_da_sinistra_a_destra()
+        #print("--------------------------------------------------------------")
+
+    print()
+    print(f"Partita vinta dopo {contatore_first_win-1} partite")
+
+
+
+    solitario = Solitario()
+    vittorie_dx_sx = 0
+    for j in range(1000):
+        if(solitario.gioca()):
+            vittorie_dx_sx += 1
+            print("W", end="")
+
+        else:
+            print("#", end="")
+        solitario.setup_post_game_da_destra_a_sinistra()
+    
+    print(f"Vittorie da destra a sinistra con mazzo iniziale casuale: {vittorie_dx_sx}")
+
+
+
+
