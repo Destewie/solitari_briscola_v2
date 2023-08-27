@@ -18,7 +18,7 @@ Di seguito si possono trovare tutte le informazioni riguardo alle regole e ai da
 ### Regole 
 ### Analisi Dati 
 Visto che il mazzo di ogni partita è influenzato dai mazzetti rimanenti sul tavolo dopo la precedente partita, questo non viene mescolato per _p_ partite.  
-Si è osservato che, una volta che un mazzo vince una volta, continuerà a vincere finché non viene rimescolato.
+Si è osservato che, una volta che un mazzo vince una volta, continuerà a vincere finché non viene rimescolato.  
 Siamo interessati a:
 - Percentuale di mescolate che portano ad una streak di vittorie.
 - Medie di partite perse prima di entrare in una streak di vittorie
@@ -27,7 +27,7 @@ Siamo interessati a:
 ### Regole 
 ### Analisi Dati 
 Visto che il mazzo di ogni partita è influenzato dai mazzetti rimanenti sul tavolo dopo la precedente partita, questo non viene mescolato per _p_ partite.  
-Con questo metodo si è osservato che ogni mescolata porta inevitabilmente ad una vittoria dopo sufficienti partite.
+Con questo metodo si è osservato che ogni mescolata porta inevitabilmente ad una vittoria dopo sufficienti partite.  
 Siamo interessati a:
 - Media di partite perse prima di entrare in una streak di vittorie
 
