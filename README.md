@@ -1,5 +1,5 @@
 # solitari_briscola_v2
-Simulazioni di solitari svolti con le carte da briscola. \n
+Simulazioni di solitari svolti con le carte da briscola.  
 Di seguito si possono trovare tutte le informazioni riguardo alle regole e ai dati raccolti di ognuno.
 
 ## Solitario poeri
