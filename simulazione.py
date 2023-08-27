@@ -7,7 +7,7 @@ import copy
 
 NUMERO_DI_PARTITE = 10000
 NUMERO_DI_SIMBOLI_DI_AVANZAMENTO = 100
-NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO = 100
+NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO = 50
 CAMBIAMENTI_TOTALI_DI_MAZZO = int(NUMERO_DI_PARTITE / NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO)
 
 def stampa_caricamento(i_partita):
@@ -15,7 +15,7 @@ def stampa_caricamento(i_partita):
     if i_partita % (NUMERO_DI_PARTITE/NUMERO_DI_SIMBOLI_DI_AVANZAMENTO) == 0:
         simboli_da_stampare = int(i / (NUMERO_DI_PARTITE/NUMERO_DI_SIMBOLI_DI_AVANZAMENTO))
 
-        #os.system("clear")
+        os.system("clear")
         print("ATTENDERE LA FINE DELLA SIMULAZIONE...")
         for j in range(simboli_da_stampare):
             print("#", end="", flush=True)
@@ -78,6 +78,7 @@ if __name__ == "__main__":
     # Statistiche BURI NO SHUFFLE Dx -> Sx
     buriNS_dx_sx_n_perse_inizialmente_quando_poi_vince_tot = 0
     buriNS_dx_sx_volte_in_cui_alla_fine_vince_tot = 0
+    buriNS_dx_sx_volte_in_cui_alla_fine_vince_perdendo_la_prima_tot = 0
     buriNS_dx_sx_partite_perse_con_un_mazzo = 0
     buriNS_dx_sx_ultima_partita_vinta = False
     buriNS_dx_sx_prima_partita_persa = False
@@ -87,7 +88,7 @@ if __name__ == "__main__":
 
 
     # STAMPA INIZIO
-    os.system("clear")
+    #os.system("clear")
     print("ATTENDERE LA FINE DELLA SIMULAZIONE...")
     for i in range(NUMERO_DI_SIMBOLI_DI_AVANZAMENTO):
         print("_", end="", flush=True)
@@ -107,42 +108,50 @@ if __name__ == "__main__":
 
         #--------------------------------------------------------
         
-        # BURI NO SHUFFLE Dx -> Sx
-        if(i % NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO == 0):
-            setup_buri_no_shuffle(buri_solitario_no_shuffle_dx_sx, buri_solitario_no_shuffle_sx_dx)
+        if(i % NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO == 0 and i != 0):
+            #setup_buri_no_shuffle(buri_solitario_no_shuffle_dx_sx, buri_solitario_no_shuffle_sx_dx)
+            buri_solitario_no_shuffle_dx_sx = bsn.Solitario()
+            buri_solitario_no_shuffle_sx_dx = bsn.Solitario()
+            buri_solitario_no_shuffle_sx_dx.mazzo = copy.deepcopy(buri_solitario_no_shuffle_dx_sx.mazzo) #in modo da partire dallo stesso mazzo
 
-            # STAT
+
+            # STAT dx -> sx
             if buriNS_dx_sx_ultima_partita_vinta:
-                print("OLLLLAAA")
                 buriNS_dx_sx_volte_in_cui_alla_fine_vince_tot += 1
 
-            # STAT
             if buriNS_dx_sx_ultima_partita_vinta and buriNS_dx_sx_prima_partita_persa:
+                buriNS_dx_sx_volte_in_cui_alla_fine_vince_perdendo_la_prima_tot += 1
                 buriNS_dx_sx_n_perse_inizialmente_quando_poi_vince_tot += buriNS_dx_sx_partite_perse_con_un_mazzo
 
+            # STAT dx -> sx
 
+
+
+            # RESET STAT dx -> sx
             buriNS_dx_sx_partite_perse_con_un_mazzo = 0
             buriNS_dx_sx_prima_partita_persa = False
+
+            # RESET STAT sx -> dx
 
 
         buriNS_dx_sx_ultima_partita_vinta = False
         if buri_solitario_no_shuffle_dx_sx.gioca():
-            print("vinta")
+            # Se vince
             buriNS_dx_sx_ultima_partita_vinta = True
         else:
+            # Se perde
             if(i % NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO == 0):
                 buriNS_dx_sx_prima_partita_persa = True
 
             buriNS_dx_sx_partite_perse_con_un_mazzo += 1
 
-        #--------------------------------------------------------
-
-        # BURI NO SHUFFLE Sx -> Dx
+        buri_solitario_no_shuffle_dx_sx.setup_post_game_da_destra_a_sinistra()
 
         #--------------------------------------------------------
 
 
     os.system("clear")
+
 
     # STAMPA RISULTATI POERI
     poeri_percentuale = poeri_vittorie_tot / NUMERO_DI_PARTITE * 100
@@ -174,23 +183,19 @@ if __name__ == "__main__":
     print("SOLITARIO DI BURI NO SHUFFLE Dx -> Sx")
     print("[Il solitario di Buri, solo che a fine game raccolgo i mazzetti impilandoli da quello più a destra a quello più a sinistra]")
     print()
-    print("Volte alla fine vince: ", buriNS_dx_sx_volte_in_cui_alla_fine_vince_tot)
-    print(f"Percentuale esito positivo provando a sovrapporre {NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO} volte i mazzetti prima di rimescolare: {buriNS_dx_sx_volte_in_cui_alla_fine_vince_tot / CAMBIAMENTI_TOTALI_DI_MAZZO * 100}%")
-    print("Volte alla fine vince dopo aver perso la prima partita: ", buriNS_dx_sx_n_perse_inizialmente_quando_poi_vince_tot)
-    print(f"Percentuale esito positivo provando a sovrapporre {NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO} volte i mazzetti prima di rimescolare perdendo la prima partita: {buriNS_dx_sx_n_perse_inizialmente_quando_poi_vince_tot / CAMBIAMENTI_TOTALI_DI_MAZZO * 100}%")
+    print(f"Le carte vengono rimescolate {CAMBIAMENTI_TOTALI_DI_MAZZO} volte")
+    print(f"Percentuale esito positivo sovrapponendo i mazzetti a fine partita {NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO} volte prima di rimescolare casualmente il mazzo: {buriNS_dx_sx_volte_in_cui_alla_fine_vince_tot / CAMBIAMENTI_TOTALI_DI_MAZZO * 100}%")
+    print(f"Media partite perse prima di entrare in streak di vittorie con lo stesso mazzo (quando la prima partita non è già vincente): {buriNS_dx_sx_n_perse_inizialmente_quando_poi_vince_tot / buriNS_dx_sx_volte_in_cui_alla_fine_vince_perdendo_la_prima_tot}")
+    print("(Se la prima partita è vincente, anche tutte le successive lo sono)")
 
     print()
     print("---------------------------------------------")
     print()
 
     # STAMPA RISULTATI BURI NO SHUFFLE Sx -> Dx
-    #buri_no_shuffle_sx_dx_percentuale = buri_no_shuffle_sx_dx_contatore / NUMERO_DI_PARTITE * 100
-    #buri_no_shuffle_sx_dx_media_mazzetti = buri_no_shuffle_mazzetti_sx_dx_totali / NUMERO_DI_PARTITE
     print("SOLITARIO DI BURI NO SHUFFLE Sx -> Dx")
     print("[Il solitario di Buri, solo che a fine game raccolgo i mazzetti impilandoli da quello più a sinistra a quello più a destra]")
     print()
-    #print(f"Percentuale di vittorie: {buri_no_shuffle_sx_dx_percentuale}%")
-    #print(f"Media dei mazzetti rimanenti sul tavolo a fine partita: {buri_no_shuffle_sx_dx_media_mazzetti}")
 
 
 

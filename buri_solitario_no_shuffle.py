@@ -181,22 +181,21 @@ if __name__ == "__main__":
         #print("--------------------------------------------------------------")
 
     print()
-    print(f"Partita vinta dopo {contatore_first_win-1} partite")
+    print(f"Partita vinta dopo {contatore_first_win-1} partite sovrapponendo da sinistra a destra")
 
 
+    print("mescolo e gioco 50 mazzi diversi da destra a sinistra")
+    for i in range(50):
+        solitario = Solitario()
+        for j in range(50):
+            if(solitario.gioca()):
+                print("W", end="")
 
-    solitario = Solitario()
-    vittorie_dx_sx = 0
-    for j in range(1000):
-        if(solitario.gioca()):
-            vittorie_dx_sx += 1
-            print("W", end="")
-
-        else:
-            print("#", end="")
-        solitario.setup_post_game_da_destra_a_sinistra()
+            else:
+                print("-", end="")
+            solitario.setup_post_game_da_destra_a_sinistra()
+        print()
     
-    print(f"Vittorie da destra a sinistra con mazzo iniziale casuale: {vittorie_dx_sx}")
 
 
 
