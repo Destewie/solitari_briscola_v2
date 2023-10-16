@@ -20,3 +20,11 @@ class Solitario:
             except MazzoFinitoError:
                 #print(self.mazzo)
                 return True
+
+if __name__ == "__main__":
+    solitario = Solitario()
+    vittorie = 0
+    for i in range(1000):
+        if solitario.gioca():
+            vittorie += 1
+    print("Vittorie su 1000 partite: ", vittorie)

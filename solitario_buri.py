@@ -135,4 +135,7 @@ class Solitario:
 
 if __name__ == "__main__":
     solitario = Solitario()
-    solitario.gioca()
+    if solitario.gioca():
+        print("HAI VINTO!")
+    else:
+        print("HAI PERSO, RITENTA!")
