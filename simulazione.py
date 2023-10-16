@@ -1,6 +1,6 @@
-import poeri_solitario as ps
-import buri_solitario as bs
-import buri_solitario_no_shuffle as bsn
+import solitario_poeri as ps
+import solitario_buri as bs
+import solitario_buri_no_shuffle as bsn
 import os
 import matplotlib.pyplot as plt
 import copy
