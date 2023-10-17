@@ -24,7 +24,7 @@ Rimanere alla fine del gioco con un solo mazzetto sul tavolo
 - Si estraggono, una alla volta, le carte dalla cima del mazzo
 - Le carte che vengono estratte verranno posizionate lungo una linea che si espande solo verso destra
 - Ogni volta che si posiziona una nuova carta sul tabellone, c'è la possibilità che si possa sovrapporre ad uno dei due mazzetti alla sua sinistra
-- Regole per la sovrapposizione: 
+Regole per la sovrapposizione: 
 1. Una carta (o mazzetto) si deve sovrapporre ad uno dei due mazzetti precedenti se ha seme o valore uguale con la carta in cima al mazzetto
 2. Si parte a controllare dal mazzetto più vicino
 - Quando si sovrappone una carta (o mazzetto) ad un altro mazzetto, l'effetto si deve propagare anche ai relativi mazzetti a sinistra
@@ -68,6 +68,17 @@ Avere tutte le carte scoperte al posto giusto quando si pesca o si scopre il qua
 - Ripeto finché non pesco un re
 - Ogni volta che pesco un re, lo metto al suo posto (finora non occupato da nessun'altra carta) e pesco nuovamente dal mazzetto
 - Quando viene pescato il quarto re, il gioco finisce
+- Si può vincere se, a fine partita, tutte le carte rimaste coperte sul tavolo sono al posto giusto
 ### Analisi Dati 
 
 
+## Solitario dell'orologio
+### Obiettivo
+Coprire tutte le carte posizionate come le lancette dell'orologio
+### Regole
+- Mescolo il mazzo
+- Dispongo 12 carte (dette l'orologio) sul tavolo estraendole dalla cima del mazzo 
+> (Si chiama gioco dell'orologio perché quando viene fatto su un tavolo, le 12 carte menzionate prima vengono messe a mò di lancette dell'orologio)
+- Dalle restanti carte se ne scarta una e se ne estrae un'altra
+- Si coprono tutte le carte dell'orologio con valore uguale alla carta appena estratta dal mazzo di pesca
+- Il gioco finisce quando il mazzo di pesca finisce o quando si coprono tutte le carte dell'orologio
