@@ -1,4 +1,5 @@
 from briscola_essentials import Carta, Mazzo, MazzoFinitoError, NOMI_DEI_SEMI, NOMI_DEI_VALORI
+import logging
 
 # modifica ad hoc per questo caso
 class CartaRe(Carta):
@@ -40,7 +41,7 @@ class Solitario:
         #rappresento le carte scoperte con una coppia di interi, il primo per il seme e il secondo per il valore
         for i in range(self.NUM_RIGHE):
             for j in range(self.NUM_COLONNE):
-                if self.tavola[i][j] == None:
+                if self.tavola[i][j] == None or isinstance(self.tavola[i][j], int):
                     print("  -  ", end=" ")
                 elif self.tavola[i][j].coperta:
                     print("  *  ", end=" ")
@@ -51,29 +52,27 @@ class Solitario:
 
 
     def gioca(self):
-        #pesca una carta e mettila nel tavolo seguendo la key di NOME DEI SEMI e NOME DEI VALORI
-        #se la carta è un re, mettilo nell'ultima colonna
+        self.setup()
         carta_in_mano = None
 
         try:
             while(True): 
-                if carta_in_mano == None:
+                if carta_in_mano == None or isinstance(carta_in_mano, int):
                     carta_in_mano = self.mazzo.pesca()
-                    print("Hai pescato: ", end=" ")
+                    #print("Hai pescato: ", end=" ")
                 carta_in_mano.coperta = False
 
-                print(f"{carta_in_mano}: {carta_in_mano.seme}, {carta_in_mano.valore}")
+                #print(f"{carta_in_mano}: {carta_in_mano.seme}, {carta_in_mano.valore}")
 
                 carta_dal_tavolo = self.tavola[carta_in_mano.seme-1][carta_in_mano.valore-1]
                 self.tavola[carta_in_mano.seme-1][carta_in_mano.valore-1] = carta_in_mano #metto la carta sul tavolo
 
-                self.stampa_tavola()
-                print()
+                #self.stampa_tavola()
+                #print()
 
                 carta_in_mano = carta_dal_tavolo #prendo la carta dal tavolo
 
         except MazzoFinitoError:
-
             for i in range(self.NUM_RIGHE):
                 for j in range(self.NUM_COLONNE):
                     if self.tavola[i][j].seme-1 != i or self.tavola[i][j].valore-1 != j or self.tavola[i][j] == None:

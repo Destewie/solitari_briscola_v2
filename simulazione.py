@@ -1,4 +1,5 @@
 import solitario_poeri as ps
+import solitario_re as re
 import solitario_buri as bs
 import solitario_buri_no_shuffle as bsn
 import os
@@ -106,6 +107,7 @@ def setup_buri_no_shuffle(solitario_dx_sx, solitario_sx_dx):
 
 if __name__ == "__main__":
     poeri_solitario = ps.Solitario()
+    re_solitario = re.Solitario()
     buri_solitario  = bs.Solitario()
     buri_solitario_no_shuffle_dx_sx = bsn.Solitario()
     buri_solitario_no_shuffle_sx_dx = bsn.Solitario()
@@ -116,6 +118,10 @@ if __name__ == "__main__":
     poeri_vittorie_tot = 0
     poeri_carte_pescate_totali = 0
     poeri_vettore_risultati_crescente = []
+
+    # Statistiche RE
+    re_vittorie_tot = 0
+    re_vettore_risultati_crescente = []
 
     # Statistiche BURI
     buri_vittorie_tot = 0
@@ -153,8 +159,7 @@ if __name__ == "__main__":
 
         #-------------------------------------------------------- RE
 
-
-
+        re_vittorie_tot = gioca_re(re_solitario, re_vittorie_tot, re_vettore_risultati_crescente)
 
         #-------------------------------------------------------- BURI
 
@@ -228,6 +233,17 @@ if __name__ == "__main__":
     print()
     print("Percentuale di vittorie: " + colored(f"{poeri_percentuale}%", "blue"))
     print("Carte medie pescate prima di perdere: " + colored(poeri_carte_medie_pescate, "blue"))
+
+    print()
+    print("---------------------------------------------")
+
+    # STAMPA RISULTATI RE
+    re_percentuale = re_vittorie_tot / NUMERO_DI_PARTITE * 100
+    print(colored("SOLITARIO DI RE", "red"))
+    print(colored("[Istruzioni game]", "yellow"))
+    print()
+    print("Percentuale di vittorie: " + colored(f"{re_percentuale}%", "blue"))
+    print(f"Tot vittorie: {re_vittorie_tot}")
 
     print()
     print("---------------------------------------------")
