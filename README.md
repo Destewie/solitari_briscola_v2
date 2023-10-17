@@ -25,8 +25,8 @@ Rimanere alla fine del gioco con un solo mazzetto sul tavolo
 - Le carte che vengono estratte verranno posizionate lungo una linea che si espande solo verso destra
 - Ogni volta che si posiziona una nuova carta sul tabellone, c'è la possibilità che si possa sovrapporre ad uno dei due mazzetti alla sua sinistra
 - Regole per la sovrapposizione: 
-> - Una carta (o mazzetto) si deve sovrapporre ad uno dei due mazzetti precedenti se ha seme o valore uguale con la carta in cima al mazzetto
-> - Si parte a controllare dal mazzetto più vicino
+1. Una carta (o mazzetto) si deve sovrapporre ad uno dei due mazzetti precedenti se ha seme o valore uguale con la carta in cima al mazzetto
+2. Si parte a controllare dal mazzetto più vicino
 - Quando si sovrappone una carta (o mazzetto) ad un altro mazzetto, l'effetto si deve propagare anche ai relativi mazzetti a sinistra
 ### Analisi Dati 
 - Percentuale di vittoria
