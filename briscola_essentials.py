@@ -21,7 +21,9 @@ class Carta:
     #ridefinisco l'operatore per l'assegnazione tra due oggetti Carta
 
 
-    
+
+# bello perché le carte non vengono estratte per davvero
+# questo ti consente di resettare l'oggetto mescolando le carte
 class Mazzo:
     def __init__(self):
         self.indice_carta_da_pescare = 0
