@@ -6,10 +6,12 @@ import matplotlib.pyplot as plt
 import copy
 from termcolor import colored
 
-NUMERO_DI_PARTITE = 1000000
+NUMERO_DI_PARTITE = 10000
 NUMERO_DI_SIMBOLI_DI_AVANZAMENTO = 100
 NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO = 50
 CAMBIAMENTI_TOTALI_DI_MAZZO = int(NUMERO_DI_PARTITE / NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO)
+
+# ------------------------------------------------------------------------------------------------------
 
 def stampa_caricamento(i_partita):
     # STAMPA PROGRESSO
@@ -23,40 +25,84 @@ def stampa_caricamento(i_partita):
         for j in range(NUMERO_DI_SIMBOLI_DI_AVANZAMENTO - simboli_da_stampare):
             print("_", end="", flush=True)
 
+# ------------------------------------------------------------------------------------------------------
 
 def gioca_poeri(solitario, contatore_vittorie, carte_pescate_tot, vettore_risultati_crescente):
-    vittorie_tot_finora = 0
+    ultima_vinta = False
     if solitario.gioca():
         contatore_vittorie += 1
-        vittorie_tot_finora = 1
+        ultima_vinta = True
 
-    if(len(vettore_risultati_crescente) != 0):
-        vittorie_tot_finora += vettore_risultati_crescente[-1]
 
-    vettore_risultati_crescente.append(vittorie_tot_finora)
+    if(len(vettore_risultati_crescente) == 0):
+        #Se il vettore è vuoto:
+        if(ultima_vinta):
+            vettore_risultati_crescente.append(1)
+        else:
+            vettore_risultati_crescente.append(0)
+    else:
+        #Se il vettore non è vuoto:
+        vettore_risultati_crescente.append(vettore_risultati_crescente[-1])
+        if(ultima_vinta):
+            vettore_risultati_crescente[-1] += 1 # -1 in un array vuol dire l'ultimo elemento
+
     carte_pescate_tot += poeri_solitario.mazzo.numero_carte_pescate()
     return contatore_vittorie, carte_pescate_tot 
 
+# ------------------------------------------------------------------------------------------------------
+
+def gioca_re(solitario, contatore_vittorie, vettore_risultati_crescente):
+    ultima_vinta = False
+    if solitario.gioca():
+        contatore_vittorie += 1
+        ultima_vinta = True
+    
+    if(len(vettore_risultati_crescente) == 0):
+        #Se il vettore è vuoto:
+        if(ultima_vinta):
+            vettore_risultati_crescente.append(1)
+        else:
+            vettore_risultati_crescente.append(0)
+    else:
+        #Se il vettore non è vuoto:
+        vettore_risultati_crescente.append(vettore_risultati_crescente[-1])
+        if(ultima_vinta):
+            vettore_risultati_crescente[-1] += 1 # -1 in un array vuol dire l'ultimo elemento
+
+    return contatore_vittorie
+
+# ------------------------------------------------------------------------------------------------------
 
 def gioca_buri(solitario, contatore_vittorie, mazzetti_a_fine_partita_tot, vettore_risultati_crescente):
-        vittorie_tot_finora = 0
+        ultima_vinta = False
         if solitario.gioca():
             contatore_vittorie += 1
-            vittorie_tot_finora = 1
+            ultima_vinta = True
 
-        if(len(vettore_risultati_crescente) != 0):
-            vittorie_tot_finora += vettore_risultati_crescente[-1]
+        if(len(vettore_risultati_crescente) == 0):
+            #Se il vettore è vuoto:
+            if(ultima_vinta):
+                vettore_risultati_crescente.append(1)
+            else:
+                vettore_risultati_crescente.append(0)
+        else:
+            #Se il vettore non è vuoto:
+            vettore_risultati_crescente.append(vettore_risultati_crescente[-1])
+            if(ultima_vinta):
+                vettore_risultati_crescente[-1] += 1 # -1 in un array vuol dire l'ultimo elemento
 
-        vettore_risultati_crescente.append(vittorie_tot_finora)
         mazzetti_a_fine_partita_tot += len(solitario.tavolo.mazzetti)
 
         return contatore_vittorie, mazzetti_a_fine_partita_tot
+
+# ------------------------------------------------------------------------------------------------------
     
 def setup_buri_no_shuffle(solitario_dx_sx, solitario_sx_dx):
     solitario_dx_sx = bsn.Solitario()
     solitario_sx_dx = bsn.Solitario()
     solitario_sx_dx.mazzo = copy.deepcopy(solitario_dx_sx.mazzo) #in modo da partire dallo stesso mazzo
 
+# ------------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
     poeri_solitario = ps.Solitario()
@@ -66,7 +112,6 @@ if __name__ == "__main__":
     buri_solitario_no_shuffle_sx_dx.mazzo = copy.deepcopy(buri_solitario_no_shuffle_dx_sx.mazzo) #in modo da partire dallo stesso mazzo
 
 
-    buriNS_dx_sx_mazzo_vinto = False
     # Statistiche POERI
     poeri_vittorie_tot = 0
     poeri_carte_pescate_totali = 0
@@ -102,15 +147,20 @@ if __name__ == "__main__":
 
         stampa_caricamento(i)
 
-        #--------------------------------------------------------
+        #-------------------------------------------------------- POERI
 
         poeri_vittorie_tot, poeri_carte_pescate_totali = gioca_poeri(poeri_solitario, poeri_vittorie_tot, poeri_carte_pescate_totali, poeri_vettore_risultati_crescente)
 
-        #--------------------------------------------------------
+        #-------------------------------------------------------- RE
+
+
+
+
+        #-------------------------------------------------------- BURI
 
         buri_vittorie_tot, buri_mazzetti_totali = gioca_buri(buri_solitario, buri_vittorie_tot, buri_mazzetti_totali, buri_vettore_risultati_crescente)
 
-        #--------------------------------------------------------
+        #-------------------------------------------------------- BURI NO SHUFFLE
         
         if(i % NUMERO_PARTITE_PRIMA_DI_CAMBIARE_IL_MAZZO == 0 and i != 0):
             #setup_buri_no_shuffle(buri_solitario_no_shuffle_dx_sx, buri_solitario_no_shuffle_sx_dx)
